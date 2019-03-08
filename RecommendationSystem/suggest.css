@@ -1,0 +1,37 @@
+div#container 
+{
+	/*border:2px solid red;*/
+	border:2px white;
+
+	width:200px;
+	display:none;
+}
+
+.notfound
+{
+	background-color:ivory;
+	font-style:italic;
+}
+
+.found
+{
+	background-color:white;
+	font-style:normal;
+}
+
+div.suggest
+{
+	/*color: red;*/
+	color:black;
+	/*background-color:yellow;*/
+	background-color:white;
+}
+
+div.suggest:hover
+{
+	/*color: yellow;*/
+	color:black;
+	background-color:white;
+	/*background-color:red;*/
+	cursor: pointer;
+}

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hidden frames AJAX</title>
+<link type="text/css" rel="stylesheet" href="suggest.css"/>
+<link href="style2.css" rel="stylesheet" type="text/css">
+<style type="text/css"></style>
+<script type = "text/javascript" src="suggest.js"></script>
+<script>
+obj2 = 
+{
+	getDetails: function()
+	{
+
+		//iframe is a child of the main window that is going to be frozen and processes our requests
+		
+		usn = document.getElementById("usn");
+		if(usn == null || usn.value == "")
+		{	
+			document.getElementById("dept").value = "";
+			//document.getElementById("gpa").value = "";
+			return;
+		}
+		//if we have entered a usn , force iframe to visit the server
+		ifr = document.getElementById("helper");
+
+		//iframe makes a synchronous call to server
+		//iframe is blocked, but we dont care because the main window is free for user operation
+		ifr.src = "http://localhost/wt/getDetails.php?usn=" + usn.value;
+	
+	} ,
+	updateFields : function(str)
+	{
+		//get the dept and the grade fields and update them 
+		retarr = str.split(";"); //split always gives array 
+		document.getElementById("usn").value = retarr[0];
+		document.getElementById("dept").value = retarr[1];
+		//document.getElementById("gpa").value = retarr[2];	
+
+		var helper = document.getElementById("ifr");
+			
+			//Force a GET request to the server
+		helper.src = "http://localhost/wt/getelectives.php?dept=" + retarr[1] ;
+	},
+	populateElectives: function(electives)
+	{
+		//The returned string is ";" separated
+		//0th element is the dept. The others
+		// are the electives
+		
+		var retArr = electives.split(";");
+		
+		document.getElementById("dept").value = retArr[0];
+		
+		//Loop through the electives 
+		var sel = document.getElementById("el");
+		sel.innerHTML = "";
+		
+		for(var j = 1; j < retArr.length;j++)
+		{
+			var opt = document.createElement("option");
+			
+			opt.innerHTML = retArr[j];
+			
+			sel.appendChild(opt);
+		
+		}
+	},
+
+
+	xhr : new XMLHttpRequest() ,
+
+	fetchRecommendation : function()
+	{
+		
+		proj = document.getElementById("proj").value;
+		dom = document.getElementById("movie").value;
+		gpa = document.getElementById("gpa").value;
+		st="";
+		st=proj+";"+dom+";"+gpa;
+		//arr=[];
+		//arr.push(proj,dom,gpa);
+		//alert(arr);
+
+		this.xhr.onreadystatechange = this.showResult;
+		
+		//open a connection
+		this.xhr.open("GET" , "http://localhost/wt/sub/getsubjects.php?st="+st , true);
+	
+		//send the request
+		this.xhr.send();
+
+		//var ifr2 = document.getElementById("ifr2");
+			
+			//Force a GET request to the server
+		//ifr2.src = "http://localhost/wt/sub/getsubjects.php?st=" + st ;
+		//alert(b);
+		
+	},
+	showResult: function(result)
+	{	
+
+		//document.getElementById("res").value = result;
+		//alert(result);
+		if(obj2.xhr.readyState == 4 && obj.xhr.status == 200){
+			retvals = obj.xhr.responseText;
+
+			document.getElementById("res").value = result;
+			//document.getElementById("gpa").value = retvals[2];
+
+			obj.xhr.abort();
+		}
+	}
+
+}
+
+function validate(){
+	if(document.getElementById("usn").value == ""){
+		alert("Please fill the USN field")
+		return false;
+	}
+	else return true;
+}
+
+
+</script>
+</head>
+<body>
+    <header>
+        
+    <div class="row">
+        <div class="logo">
+        <img src="logo.png"
+    </div>
+            
+    <ul class="main-nav">
+    	<li><a href="index.php"> TIMELINE </a></li>    
+        <li class="active"><a href="Form.html"> RECOMMEND </a></li>
+        <li><a href="feedback.html"> FEEDBACK </a></li>
+        <li><a href="index.php?logout='1'"> LOG OUT </a></li>
+
+    </ul>    
+        
+    </div>
+    
+<div id="hey" >
+	<h2> Recommendation page</h2>
+	<br><br>
+	<iframe src="" width="100" height="100"  id = "helper" name="Post" style="display:none"></iframe>
+
+	<!--<form action = "http://localhost/hfajax_iframe/register.php" method="POST" onsubmit="return validate()" target="Post"> -->
+
+	<form action="getsubjects.php">
+		<label>USN:<br><input type="text" id="usn" name="usn"  onblur="obj2.getDetails()" /></label><p><br>
+		<!-- obj.getDetails will force the iframe to make the call , and changing the 'src' of the iframe will force it to make a call-->
+		<label>DEPT:<br><input type="text" id="dept" name="dept" readonly  /><p></label><br>
+		<!-- <input type="submit" value="Register"/> -->
+
+		<label>OFFERED ELECTIVES:<br>
+	<select id="el" style="width:100px">
+	</select> </label> </br> </br>
+	<label>GPA:<br><input type="text" id="gpa" name="gpa" /><p></label><br>
+	
+	<label>Preferred Domain:</label>
+
+	<table border="0" cellpadding="0">
+
+<tr>
+	<input type="text" id="movie" size="30" name="dept" onkeyup="obj.getMovie()"/>
+</tr>
+<tr>
+	<td></td>
+	<td><div id="container"></div></td>
+</tr>
+</table><br>
+	
+	<label>Favourite Project:<br><input type="text" id="proj" name="proj"/><p></label><br>
+	<!--<label>Recommended Elective:<br><input type="text" id="res" name="res" readonly /><p></label><br>-->
+
+		<label> <input type="submit"  class="btn2" value="Recommend Elective" /> </label>
+
+	<iframe id="ifr" width="200" height="100" style="display:none"/>
+
+	<!--<iframe id="ifr2" width="200" height="100" style="display:none"/> -->
+
+	<!-- </label>-->
+	
+	</form>
+</div>
+	
+
+</body>
+
+</html>
+
+

@@ -1,0 +1,9 @@
+Algorithms;analysis of algorithms;design of algorithms;divide and conquer algorithms;time complexity of algorithms
+Analytics;data analytics;data preprocessing;data modelling
+Blockchain;
+Compiler Design;syntax analysis;semantic analysis;
+Computer Architecture;
+Cryptography;
+Data Science;machine learning;9.0;artifical intelligence;9.2;deep learning;9.5;neural networks;9.85
+Design of Software;
+
